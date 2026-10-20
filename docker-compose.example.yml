@@ -1,0 +1,22 @@
+# For Home Assistant Container / Core users. Home Assistant OS users: install the add-on instead (see README).
+services:
+  cast-visualizer:
+    build: ./cast_visualizer
+    container_name: cast-visualizer
+    restart: unless-stopped
+    init: true                  # reaps the processes the visualizer starts and stops
+    network_mode: host          # Google Cast discovery, Squeezelite discovery and the HLS stream
+    devices:
+      - /dev/dri:/dev/dri       # Intel/AMD GPU for the headless compositor
+    environment:
+      CAST_NAME: Living Room TV # friendly name of your Chromecast
+      PLAYER_NAME: Visualizer   # name of the player in Music Assistant
+      # HOST_IP: 192.168.1.10   # only if auto-detection picks the wrong interface
+      # PORT: "8099"
+      # ON_START_URL: http://homeassistant.local:8123/api/webhook/visualizer_started
+      # ON_STOP_URL: http://homeassistant.local:8123/api/webhook/visualizer_stopped
+    volumes:
+      - ./data:/data            # favorite / removed visuals
+    logging:
+      driver: json-file
+      options: {max-size: 10m, max-file: "3"}

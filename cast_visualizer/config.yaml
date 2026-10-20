@@ -1,0 +1,40 @@
+name: Cast Visualizer
+version: "0.1.0"
+slug: cast_visualizer
+description: A Music Assistant player that casts a projectM music visualizer to a Chromecast
+url: https://github.com/rdzjuanjo/ha-cast-visualizer
+arch:
+  - amd64
+  - aarch64
+startup: application
+boot: auto
+# Google Cast discovery (mDNS), Squeezelite discovery and the HLS stream need the host network
+host_network: true
+# GPU render node for the headless compositor (Intel/AMD)
+video: true
+options:
+  cast_name: ""
+  player_name: Visualizer
+  host_ip: ""
+  port: 8099
+  width: 854
+  height: 480
+  fps: 24
+  video_bitrate: 1800
+  preset_duration: 30
+  silence_seconds: 20
+  on_start_url: ""
+  on_stop_url: ""
+schema:
+  cast_name: str
+  player_name: str
+  host_ip: str?
+  port: port
+  width: int(320,1920)
+  height: int(240,1080)
+  fps: int(10,60)
+  video_bitrate: int(300,8000)
+  preset_duration: int(5,600)
+  silence_seconds: int(5,600)
+  on_start_url: str?
+  on_stop_url: str?

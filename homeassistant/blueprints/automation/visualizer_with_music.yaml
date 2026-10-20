@@ -1,0 +1,76 @@
+blueprint:
+  name: Cast Visualizer - start with the music
+  description: >-
+    Turns the music visualizer on when the Music Assistant visualizer player starts playing, and off after it
+    has not been playing for a while. Optionally runs your own actions first (e.g. turn on the TV).
+    The add-on itself also pauses the visualizer on silence and resumes it when sound comes back.
+  domain: automation
+  source_url: https://github.com/rdzjuanjo/ha-cast-visualizer/blob/main/homeassistant/blueprints/automation/visualizer_with_music.yaml
+  input:
+    player:
+      name: Visualizer player
+      description: The Music Assistant player created by the add-on (default name "Visualizer").
+      selector:
+        entity:
+          filter:
+            - domain: media_player
+    visualizer_switch:
+      name: Visualizer switch
+      description: The "Music visualizer" switch from the package.
+      default: switch.music_visualizer
+      selector:
+        entity:
+          filter:
+            - domain: switch
+    off_after:
+      name: Turn off after
+      description: Minutes without playing before the visualizer is turned off.
+      default: 2
+      selector:
+        number:
+          min: 1
+          max: 60
+          unit_of_measurement: min
+    before_start:
+      name: Actions before starting
+      description: Optional, e.g. turn on the TV and wait a few seconds.
+      default: []
+      selector:
+        action: {}
+
+mode: restart
+triggers:
+  - trigger: state
+    entity_id: !input player
+    to: playing
+    id: playing
+  - trigger: state
+    entity_id: !input player
+    from: playing
+    for:
+      minutes: !input off_after
+    id: stopped
+actions:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: playing
+        sequence:
+          # common pattern to run an optional, possibly empty, list of actions
+          - choose: []
+            default: !input before_start
+          - action: switch.turn_on
+            target:
+              entity_id: !input visualizer_switch
+      - conditions:
+          - condition: trigger
+            id: stopped
+          - condition: not
+            conditions:
+              - condition: state
+                entity_id: !input player
+                state: playing
+        sequence:
+          - action: switch.turn_off
+            target:
+              entity_id: !input visualizer_switch

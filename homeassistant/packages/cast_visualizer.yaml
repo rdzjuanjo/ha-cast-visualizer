@@ -1,0 +1,79 @@
+# Cast Visualizer for Home Assistant.
+# Copy to /config/packages/ (enable packages: https://www.home-assistant.io/docs/configuration/packages/).
+# If the add-on/container runs on another machine, replace 127.0.0.1 with its IP.
+command_line:
+  - switch:
+      name: Music visualizer
+      unique_id: cast_visualizer
+      icon: mdi:television-play
+      command_on: curl -s -m 60 http://127.0.0.1:8099/start
+      command_off: curl -s -m 30 http://127.0.0.1:8099/stop
+      command_state: curl -s -m 10 http://127.0.0.1:8099/status
+      value_template: "{{ value == 'on' }}"
+      scan_interval: 10
+  - switch:
+      name: Only favorite visuals
+      unique_id: cast_visualizer_only_favorites
+      icon: mdi:star-circle
+      command_on: curl -s -m 30 http://127.0.0.1:8099/visual/only_favorites
+      command_off: curl -s -m 30 http://127.0.0.1:8099/visual/all
+      command_state: curl -s -m 5 http://127.0.0.1:8099/visual/mode
+      value_template: "{{ value == 'only_favorites' }}"
+      scan_interval: 60
+  - sensor:
+      name: Current visual
+      unique_id: cast_visualizer_current
+      icon: mdi:image-filter-hdr
+      command: curl -s -m 5 http://127.0.0.1:8099/visual/summary
+      value_template: "{{ value_json.current or 'none' }}"
+      json_attributes: [favorite, mode, favorites, removed, locked]
+      scan_interval: 10
+
+rest_command:
+  cast_visualizer:
+    url: "http://127.0.0.1:8099/visual/{{ action }}"
+    timeout: 30
+
+script:
+  visualizer_next:
+    alias: Next visual
+    icon: mdi:skip-next
+    sequence:
+      - action: rest_command.cast_visualizer
+        data: {action: next}
+  visualizer_previous:
+    alias: Previous visual
+    icon: mdi:skip-previous
+    sequence:
+      - action: rest_command.cast_visualizer
+        data: {action: previous}
+  visualizer_random:
+    alias: Random visual
+    icon: mdi:shuffle-variant
+    sequence:
+      - action: rest_command.cast_visualizer
+        data: {action: random}
+  visualizer_lock:
+    alias: Keep this visual
+    icon: mdi:lock
+    sequence:
+      - action: rest_command.cast_visualizer
+        data: {action: lock}
+  visualizer_unlock:
+    alias: Let visuals change
+    icon: mdi:lock-open-variant
+    sequence:
+      - action: rest_command.cast_visualizer
+        data: {action: unlock}
+  visualizer_favorite:
+    alias: Favorite this visual
+    icon: mdi:star
+    sequence:
+      - action: rest_command.cast_visualizer
+        data: {action: favorite}
+  visualizer_remove:
+    alias: Never show this visual again
+    icon: mdi:delete
+    sequence:
+      - action: rest_command.cast_visualizer
+        data: {action: remove}
