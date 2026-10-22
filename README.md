@@ -6,7 +6,7 @@ Play music on the "Visualizer" player from Music Assistant (or from the Spotify 
 and your Chromecast shows [projectM](https://github.com/projectM-visualizer/projectm) visuals (MilkDrop presets)
 reacting to the music in real time, while the sound plays through the TV.
 
-<!-- TODO: add a short GIF of the TV here -->
+![projectM visuals on a TV through a 2nd-gen Chromecast](docs/demo.gif)
 
 ## Features
 
