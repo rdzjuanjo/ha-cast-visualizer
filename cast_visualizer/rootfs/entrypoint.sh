@@ -24,7 +24,12 @@ for_window [class=".*"] fullscreen enable
 for_window [title=".*"] fullscreen enable
 CFG
 
-exec runuser -u vis -- env XDG_RUNTIME_DIR=/tmp/xdg PLAYER_NAME="$CV_PLAYER_NAME" bash -c '
+# squeezelite would take the MAC of the host interface: with host networking every instance (and any other
+# squeezelite on the machine) gets the same one and Music Assistant merges them. Derive a stable, locally
+# administered MAC from the player name instead.
+mac=$(printf %s "$CV_PLAYER_NAME" | md5sum | sed -E 's/^(..)(..)(..)(..)(..).*/02:\1:\2:\3:\4:\5/')
+
+exec runuser -u vis -- env XDG_RUNTIME_DIR=/tmp/xdg PLAYER_NAME="$CV_PLAYER_NAME" PLAYER_MAC="$mac" bash -c '
   pulseaudio -D --exit-idle-time=-1 --log-target=stderr
   sleep 2
   pactl load-module module-null-sink sink_name=vis sink_properties=device.description=Visualizer
@@ -36,6 +41,6 @@ exec runuser -u vis -- env XDG_RUNTIME_DIR=/tmp/xdg PLAYER_NAME="$CV_PLAYER_NAME
   for _ in $(seq 20); do ls /tmp/.X11-unix/X* >/dev/null 2>&1 && break; sleep 0.5; done
   display=":$(ls /tmp/.X11-unix | sed -n "s/^X//p" | sort -n | tail -1)"
   echo "Xwayland on $display"
-  squeezelite -n "$PLAYER_NAME" -o default -a 200 -C 5 &
+  squeezelite -n "$PLAYER_NAME" -m "$PLAYER_MAC" -o default -a 200 -C 5 &
   cd /app
   exec env WAYLAND_DISPLAY=wayland-1 DISPLAY="$display" /opt/venv/bin/python server.py'

@@ -1,5 +1,5 @@
 name: Cast Visualizer
-version: "0.1.0"
+version: "0.1.1"
 slug: cast_visualizer
 description: A Music Assistant player that casts a projectM music visualizer to a Chromecast
 url: https://github.com/rdzjuanjo/ha-cast-visualizer
