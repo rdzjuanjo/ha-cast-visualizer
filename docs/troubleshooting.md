@@ -26,3 +26,11 @@ log, `docker logs` can take minutes and push dockerd to 100 % CPU.
 
 **Files in `/tmp/hls` that the app cannot delete.** Don't create files there as root (e.g. with
 `docker exec ... mkdir`): the app runs as user `vis` and a start can fail if it cannot empty the folder.
+
+**"Spotify has reached its limit of 1 concurrent source streams".** MA's Spotify provider streams to one player
+at a time. If another player (for example the TV itself via DLNA) still holds the stream, playback on the
+visualizer fails: stop that player's queue first.
+
+**The visuals barely move and the sound on the TV is very low.** A newly added player in MA can start with a
+low volume, and that volume is the signal projectM and the stream receive. Set it to 100 % (see
+[music-assistant.md](music-assistant.md#volume)).

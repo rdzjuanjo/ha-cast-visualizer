@@ -134,4 +134,4 @@ Spotify Connect stuck on "connecting".
 
 ## License
 
-[MIT](LICENSE)
+[MIT](LICENSE). Contributions welcome: see [CONTRIBUTING.md](CONTRIBUTING.md).

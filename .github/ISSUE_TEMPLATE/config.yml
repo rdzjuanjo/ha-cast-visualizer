@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Questions and ideas
+    url: https://github.com/rdzjuanjo/ha-cast-visualizer/discussions
+    about: Setup help, "does it work with…", show your setup

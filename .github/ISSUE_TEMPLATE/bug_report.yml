@@ -1,0 +1,53 @@
+name: Bug report
+description: Something does not work as described
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What did you expect and what did you see instead (on the TV, in Music Assistant, in the log)?
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Cast Visualizer version
+      placeholder: "0.1.1"
+    validations:
+      required: true
+  - type: dropdown
+    id: install
+    attributes:
+      label: How is it installed
+      options:
+        - Home Assistant OS add-on
+        - Docker (Home Assistant Container / Core)
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: hardware
+    attributes:
+      label: Machine running it
+      description: CPU and GPU (e.g. "i7-6500U, Intel HD 520" or "Ryzen 5 5600G")
+    validations:
+      required: true
+  - type: input
+    id: cast
+    attributes:
+      label: Cast device
+      description: Model and generation (e.g. "Chromecast 2nd gen", "Chromecast with Google TV 4K", "Nest Hub")
+    validations:
+      required: true
+  - type: input
+    id: ma
+    attributes:
+      label: Music Assistant version and music source
+      placeholder: "2.10, Spotify"
+  - type: textarea
+    id: log
+    attributes:
+      label: Log
+      description: Add-on log (Settings → Add-ons → Cast Visualizer → Log) or `docker logs <container>`.
+      render: text

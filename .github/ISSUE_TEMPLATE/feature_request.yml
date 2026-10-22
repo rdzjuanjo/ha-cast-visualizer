@@ -1,0 +1,16 @@
+name: Feature request
+description: An idea to make it better
+labels: [enhancement]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like
+      description: What should it do, and what problem does it solve for you?
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Your setup
+      description: Hardware, cast device and HA install type, if relevant.
